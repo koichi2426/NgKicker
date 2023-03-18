@@ -1,0 +1,105 @@
+// ★解説済み★
+{
+  "name":"NgKicker",
+  "description":"First, enter the words you don't want to appear in the list. When the word or related term is searched, the search results are filtered out.",
+  "version":"1.0.0",
+  "manifest_version":3,
+  "action": {
+    "default_popup":"popups/popup.html"
+  },
+  "icons":{
+    "16":"png/Ng.png"
+  },
+
+
+  // 拡張機能が必要とする権限を指定します。
+  // これにはネイティブメッセージング、タブ、ストレージが
+  // 含まれます。
+  "permissions": [
+    "nativeMessaging",
+    "tabs",
+    "storage"
+  ],
+
+
+  // 特定のURLパターンに一致するWebページに注入する
+  // スクリプトを指定します。これにはGoogle検索結果用の
+  // コンテンツスクリプトと、その他のURL用の警告スクリプト
+  // が含まれます。
+  "content_scripts":[
+    //「https://www.google.com」というURLに対して
+    // 「jquery-3.6.3.min.js」「content_script.js」
+    // が動作する。
+    {
+      "matches":["https://www.google.com/*"],
+      "js":["jquery-3.6.3.min.js","content_script.js"]
+    },
+    //すべてのURLに対して
+    // 「jquery-3.6.3.min.js」「warning.js」
+    // が動作する。ただし、exclude_matchesプロパティで
+    // 「https://www.google.com」で実行されない
+    // ようにしている。
+    {
+    "matches":["<all_urls>"],
+    "exclude_matches":["https://www.google.com/*"],
+    "js":["jquery-3.6.3.min.js","warning.js"]
+    }
+  ],
+
+
+  // Webページからアクセス可能なリソースを指定します。
+  // これには、警告を表示するためのアラートフォルダが
+  // 含まれます。
+  // "web_accessible_resources"は、拡張機能内で
+  // 直接読み込まれることのできるリソースを指定するための
+  // オブジェクトです。
+  "web_accessible_resources":[
+    {
+      // "resources"は、拡張機能からアクセス可能なリソース
+      // を指定するためのプロパティです。この場合、
+      // "/alert/*"は、拡張機能のルートディレクトリにある
+      // "alert"という名前のディレクトリ内のすべての
+      // ファイルにアクセスできることを意味します。
+      "resources":["/alert/*"],
+
+      // "matches"は、このリソースにアクセスできるURLの
+      // パターンを指定するためのプロパティです。この場合、
+      // "<all_urls>"は、すべてのURLにアクセスできることを
+      // 意味します。
+      "matches":["<all_urls>"]
+    }
+  ],
+
+
+  // この部分は、拡張機能のバックグラウンドスクリプトを
+  // 指定するためのものです。
+  // "background"は、拡張機能のバックグラウンドスクリプト
+  // を指定するためのオブジェクトです。
+  "background": {
+    // "service_worker"は、バックグラウンドスクリプトの
+    // タイプを指定するためのプロパティで、この場合は
+    // サービスワーカーを使用することを示しています。
+
+    // "back.js"は、バックグラウンドスクリプトファイルの
+    // 名前で、このファイルには、バックグラウンドで
+    // 実行されるJavaScriptコードが含まれます。
+    "service_worker":"back.js"
+  }
+  // ＜より詳しい解説＞
+  // バックグラウンドスクリプトは、拡張機能がインストール
+  // されている間、バックグラウンドで常に実行される
+  // スクリプトです。サービスワーカーは、Webページに
+  // 関連するイベントを受信し、それらに応答する
+  // JavaScriptプログラムです。拡張機能が
+  // インストールされたときに、サービスワーカーはブラウザに
+  // 登録され、バックグラウンドスクリプトとして実行されます。
+  
+  // バックグラウンドスクリプトは、タブの開閉、
+  // ネットワークリクエストのフック、メッセージの送受信など、
+  // 拡張機能の主要な機能を提供します。また、
+  // ストレージへのアクセスや、他の拡張機能との通信など、
+  // より高度な機能も提供できます。したがって、拡張機能を
+  // 開発する際には、適切なバックグラウンドスクリプトを
+  // 実装することが非常に重要です。
+
+}
